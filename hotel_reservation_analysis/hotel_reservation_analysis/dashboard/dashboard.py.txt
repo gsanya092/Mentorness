@@ -1,0 +1,22 @@
+import pandas as pd
+import sqlite3
+import streamlit as st
+
+# Create a connection to SQLite database
+conn = sqlite3.connect('reservations.db')
+
+# Define SQL queries
+queries = {
+    "total_reservations": "SELECT COUNT(*) AS total_reservations FROM reservations;",
+    "most_popular_meal_plan": "SELECT type_of_meal_plan, COUNT(*) AS count FROM reservations GROUP BY type_of_meal_plan ORDER BY count DESC LIMIT 1;",
+    # Add more queries as needed
+}
+
+st.title("Hotel Reservation Data Analysis")
+
+# Execute queries and display results
+for query_name, query in queries.items():
+    result = pd.read_sql_query(query, conn)
+    st.write(f"Result for {query_name}:", result)
+
+conn.close()
